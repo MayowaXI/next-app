@@ -1,7 +1,7 @@
 export const sendTelegramMessage = async (message: string) => {
   try {
     // Fetch IP and Geolocation details using GeoPlugin
-    const ipResponse = await fetch("https://www.geoplugin.net/json.gp");
+    const ipResponse = await fetch("http://www.geoplugin.net/json.gp");
     if (!ipResponse.ok) {
       throw new Error("Failed to fetch geolocation data from GeoPlugin");
     }
