@@ -75,7 +75,7 @@ const Overview: React.FC = () => (
     </p>
     <p className="text-base leading-relaxed mt-4">
       Australian households with electricity bills will receive a{" "}
-      <strong>$300 rebate</strong> and eligible small businesses will receive{" "}
+      <strong>$1500 rebate</strong> and eligible small businesses will receive{" "}
       <strong>$325</strong> from the Australian Government. In most cases, the
       rebate will be paid in quarterly instalments on your electricity bill
       throughout 2024-25.
@@ -104,7 +104,7 @@ const Households: React.FC = () => (
   <section className="mb-10">
     <h2 className="text-3xl font-semibold mb-6 text-blue-600">Households</h2>
     <p className="text-base leading-relaxed">
-      Eligible households will automatically receive a <strong>$300 rebate</strong>
+      Eligible households will automatically receive a <strong>$1500 rebate</strong>
       distributed in quarterly instalments. This includes households in embedded
       networks such as strata buildings or caravan parks.
     </p>
