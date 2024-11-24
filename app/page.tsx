@@ -75,8 +75,8 @@ const Overview: React.FC = () => (
     </p>
     <p className="text-base leading-relaxed mt-4">
       Australian households with electricity bills will receive a{" "}
-      <strong>$1500 rebate</strong> and eligible small businesses will receive{" "}
-      <strong>$325</strong> from the Australian Government. In most cases, the
+      <strong>$1545 rebate</strong> and eligible small businesses will receive{" "}
+      <strong>$3250</strong> from the Australian Government. In most cases, the
       rebate will be paid in quarterly instalments on your electricity bill
       throughout 2024-25.
     </p>

