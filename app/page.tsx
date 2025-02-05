@@ -95,7 +95,7 @@ const HowToApply: React.FC = () => (
   <section className="mb-10">
     <h2 className="text-3xl font-semibold mb-6 text-blue-600">How to Apply</h2>
     <p className="text-base leading-relaxed">
-      Applying for support from The Urgent Need Assistance Program is simple, quick, and stress-free. Here&apos;ss how you can get the help you deserve:
+      Applying for support from The Urgent Need Assistance Program is simple, quick, and stress-free. Here&apos;s how you can get the help you deserve:
     </p>
     <ol className="list-decimal pl-6 mt-4">
       <li>Click the Apply for Assistance Now button below to begin your application.</li>
