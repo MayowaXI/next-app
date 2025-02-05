@@ -1,8 +1,8 @@
 import React from "react";
 
-const EnergyBillReliefPage: React.FC = () => {
+const UrgentAssistancePage: React.FC = () => {
   return (
-    <div className="bg-gray-100 text-gray-800 font-sans">
+    <div className="bg-[#66d3ee] text-gray-800 font-sans">
       <Header />
       <div className="container mx-auto px-4 py-8 md:py-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <MainContent />
@@ -17,7 +17,7 @@ const EnergyBillReliefPage: React.FC = () => {
 
 const Header: React.FC = () => (
   <header
-    className="bg-blue-600 text-white py-6"
+    className="text-white py-6"
     style={{
       backgroundImage: "url('/header-bg.jpg')",
       backgroundSize: "cover",
@@ -28,12 +28,11 @@ const Header: React.FC = () => (
     <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
       {/* Left Content */}
       <div className="text-center md:text-left">
-        <h1 className="text-3xl md:text-4xl font-bold">
-          Energy Bill Relief Fund 2024-25
+        <h1 className="text-4xl font-bold">
+          The Urgent Need Assistance Program
         </h1>
-        <p className="mt-2 text-base md:text-lg">
-          Supporting Australian households and small businesses to ease
-          cost-of-living pressures.
+        <p className="mt-2 text-lg md:text-xl">
+          Immediate, life-changing support when you need it most.
         </p>
       </div>
 
@@ -43,136 +42,33 @@ const Header: React.FC = () => (
           href="/mygov"
           className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-green-700 transition-colors"
         >
-          Apply Now
+          Apply for Assistance Now
         </a>
       </div>
     </div>
   </header>
 );
 
-
 const MainContent: React.FC = () => (
   <main className="bg-white shadow-md rounded-lg p-8 lg:col-span-2">
     <Overview />
-    <Households />
-    <SmallBusinesses />
     <Eligibility />
+    <HowToApply />
     <FAQ />
   </main>
 );
 
-// Corrected the duplication and improper nesting in the Overview component
 const Overview: React.FC = () => (
   <section className="mb-10">
     <h2 className="text-3xl font-semibold mb-6 text-blue-600">Overview</h2>
     <p className="text-base leading-relaxed">
-      The Australian Government is providing <strong>$3.5 billion</strong> to
-      extend and expand the Energy Bill Relief Fund and provide electricity bill
-      rebates to Australian households and eligible small business electricity
-      customers in 2024-25 to ease cost-of-living pressures. This builds on the{" "}
-      <strong>$1.5 billion</strong> available for energy rebates provided by the
-      Commonwealth in 2023-24 under the existing fund.
+      Life is unpredictable, and sometimes, emergencies happen when we least expect them. The Urgent Need Assistance Program is here to support
+      you in your time of greatest need. Whether you&apos;s re facing a natural disaster, a financial crisis, or any other critical situation, our mission is
+      to provide quick, easy, and reliable support to get you back on your feet.
     </p>
     <p className="text-base leading-relaxed mt-4">
-      Australian households with electricity bills will receive a{" "}
-      <strong>$1545 rebate</strong> and eligible small businesses will receive{" "}
-      <strong>$3250</strong> from the Australian Government. In most cases, the
-      rebate will be paid in quarterly instalments on your electricity bill
-      throughout 2024-25.
-    </p>
-    <p className="text-base leading-relaxed mt-4">
-      If you have an electricity account on the relevant census date, as
-      published in the fact sheets and Q&As below, you will automatically
-      receive a rebate on your next electricity bill or as soon as practicable
-      after the census date. It may take some time for the credit to be applied
-      on your electricity bill, depending on your retailer and state or
-      territory government processes.
-    </p>
-    <p className="text-base leading-relaxed mt-4">
-      If you receive your bill for the first quarter and it doesnt have a
-      credit on it, you should receive your first quarter credit along with the
-      next quarters credit automatically on your next bill.
-    </p>
-    <p className="text-base leading-relaxed mt-4">
-      State and territory governments will administer the rebates and deliver
-      the payments through retailers.
-    </p>
-  </section>
-);
-
-const Households: React.FC = () => (
-  <section className="mb-10">
-    <h2 className="text-3xl font-semibold mb-6 text-blue-600">Households</h2>
-    <p className="text-base leading-relaxed">
-      Eligible households will automatically receive a <strong>$1500 rebate</strong>
-      distributed in quarterly instalments. This includes households in embedded
-      networks such as strata buildings or caravan parks.
-    </p>
-    <ul className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-      {["ACT", "NSW", "QLD", "VIC", "SA", "TAS", "WA", "NT"].map((state) => (
-        <li key={state}>
-          <a
-            href="#"
-            className="text-blue-600 hover:underline font-medium block"
-          >
-            {state}
-          </a>
-        </li>
-      ))}
-    </ul>
-    <p className="mt-6">
-      <a
-        href="#"
-        className="inline-block text-blue-600 hover:underline font-medium"
-      >
-        Fact Sheet: Households and Embedded Network Customers (PDF)
-      </a>
-    </p>
-  </section>
-);
-
-const SmallBusinesses: React.FC = () => (
-  <section className="mb-10">
-    <h2 className="text-3xl font-semibold mb-6 text-blue-600">Small Businesses</h2>
-    <p className="text-base leading-relaxed">
-      Small businesses will receive a <strong>$325 rebate</strong> if they meet
-      state-defined electricity consumption thresholds. Rebates are applied
-      quarterly to electricity accounts, providing much-needed financial relief.
-    </p>
-    <table className="w-full mt-6 border-collapse border border-gray-200">
-      <thead>
-        <tr className="bg-gray-100">
-          <th className="px-4 py-2 border border-gray-200 text-left">State</th>
-          <th className="px-4 py-2 border border-gray-200 text-left">
-            Annual Consumption Threshold
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {[
-          { state: "NSW", threshold: "100 MWh" },
-          { state: "VIC", threshold: "40 MWh" },
-          { state: "QLD", threshold: "100 MWh" },
-          { state: "WA", threshold: "50 MWh" },
-          { state: "SA", threshold: "160 MWh" },
-          { state: "TAS", threshold: "150 MWh" },
-          { state: "ACT", threshold: "100 MWh" },
-          { state: "NT", threshold: "160 MWh" },
-        ].map(({ state, threshold }) => (
-          <tr key={state}>
-            <td className="px-4 py-2 border border-gray-200">{state}</td>
-            <td className="px-4 py-2 border border-gray-200">{threshold}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    <p className="mt-6">
-      <a
-        href="#"
-        className="inline-block text-blue-600 hover:underline font-medium"
-      >
-        Fact Sheet: Small Businesses and Embedded Network Customers (PDF)
-      </a>
+      With a streamlined application process and no red tape, we offer immediate funds, housing assistance, and medical support for those who qualify. 
+      We know that in times of crisis, every minute counts—and that’s why we’re here to ensure you have the help you need, when you need it most.
     </p>
   </section>
 );
@@ -181,18 +77,34 @@ const Eligibility: React.FC = () => (
   <section className="mb-10">
     <h2 className="text-3xl font-semibold mb-6 text-blue-600">Eligibility</h2>
     <p className="text-base leading-relaxed">
-      Households and businesses with active electricity accounts will
-      automatically receive the rebate. Concession cardholders may also qualify
-      for additional state or territory rebates.
+      The Urgent Need Assistance Program provides aid to:
     </p>
-    <div className="mt-6 text-center">
-      <a
-        href="/mygov"
-        className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-green-700 transition-colors"
-      >
-        Apply Now
-      </a>
-    </div>
+    <ul className="list-disc pl-6 mt-4">
+      <li>Families and individuals facing financial hardships due to unforeseen circumstances.</li>
+      <li>People who have been impacted by recent natural disasters or emergencies.</li>
+      <li>Small businesses struggling to survive following sudden financial shocks.</li>
+      <li>Those in immediate need of emergency housing, medical, or mental health support.</li>
+    </ul>
+    <p className="text-base leading-relaxed mt-6">
+      If any of these situations apply to you, we encourage you to apply immediately to receive urgent assistance.
+    </p>
+  </section>
+);
+
+const HowToApply: React.FC = () => (
+  <section className="mb-10">
+    <h2 className="text-3xl font-semibold mb-6 text-blue-600">How to Apply</h2>
+    <p className="text-base leading-relaxed">
+      Applying for support from The Urgent Need Assistance Program is simple, quick, and stress-free. Here&apos;ss how you can get the help you deserve:
+    </p>
+    <ol className="list-decimal pl-6 mt-4">
+      <li>Click the Apply for Assistance Now button below to begin your application.</li>
+      <li>Fill out the form with your basic information and details about your current situation.</li>
+      <li>Submit your application, and our team will review it immediately to ensure you get timely assistance.</li>
+    </ol>
+    <p className="mt-6 text-base leading-relaxed">
+      Once you apply, our team will work swiftly to get you the support you need—no waiting, no delays.
+    </p>
   </section>
 );
 
@@ -202,24 +114,24 @@ const FAQ: React.FC = () => (
     <div className="space-y-6">
       {[
         {
-          question: "How do I apply for the Energy Bill Relief Fund?",
+          question: "How do I apply for urgent assistance?",
           answer:
-            "Most households and businesses will receive the rebate automatically on their electricity bills. If you do not receive it, contact your electricity retailer.",
+            "Simply click the 'Apply for Assistance Now' button, complete the short form, and submit it. Our team will review and process your application immediately.",
         },
         {
-          question: "Am I eligible if I receive other energy rebates?",
+          question: "Who is eligible for this program?",
           answer:
-            "Yes, you can receive the Energy Bill Relief Fund rebate in addition to other state or territory energy rebates you may be eligible for.",
+            "The program is available to anyone who is facing a financial crisis, recovering from a natural disaster, or in need of urgent medical or housing support.",
         },
         {
-          question: "When will the rebate appear on my bill?",
+          question: "How quickly will I receive assistance?",
           answer:
-            "The rebate will typically appear on your next electricity bill after the relevant census date. Timing may vary depending on your retailer.",
+            "Once your application is submitted and approved, you will receive assistance as soon as possible. We understand that time is of the essence in emergencies.",
         },
         {
-          question: "Do I need to be a concession cardholder to receive the rebate?",
+          question: "Can I apply if I’m already receiving government support?",
           answer:
-            "No, all households and small businesses with active electricity accounts are eligible, regardless of concession status.",
+            "Yes, you can apply for assistance from The Urgent Need Assistance Program, even if you are already receiving other forms of government aid. We are here to provide additional support in your time of need.",
         },
       ].map(({ question, answer }, index) => (
         <div key={index}>
@@ -233,14 +145,13 @@ const FAQ: React.FC = () => (
 
 const CallToAction: React.FC = () => (
   <section className="py-12 bg-blue-50 text-center">
-    <h2 className="text-3xl font-semibold mb-4">Take the Next Step</h2>
+    <h2 className="text-3xl font-semibold mb-4">Act Now to Get the Support You Need</h2>
     <p className="text-lg leading-relaxed mb-6">
-      Learn more about the Energy Bill Relief Fund or apply now to start
-      receiving your rebate.
+      Don’t let your situation worsen—apply today and access the urgent help you need to overcome life’s challenges.
     </p>
     <div className="space-y-4 sm:space-y-0 sm:space-x-4 sm:inline-block">
       <a
-        href="https://www.energy.gov.au"
+        href="https://www.assistance.gov.au"
         target="_blank"
         rel="noopener noreferrer"
         className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-700 transition-colors mb-4 sm:mb-0"
@@ -261,8 +172,7 @@ const Footer: React.FC = () => (
   <footer className="bg-gray-800 text-white py-6">
     <div className="container mx-auto text-center">
       <p>
-        &copy; {new Date().getFullYear()} Australian Government. All rights
-        reserved.
+        &copy; {new Date().getFullYear()} The Urgent Need Assistance Program. All rights reserved.
       </p>
     </div>
   </footer>
@@ -279,44 +189,48 @@ const StickyButton: React.FC = () => (
   </div>
 );
 
+import Image from "next/image";
+
 const NewsSection: React.FC = () => (
-  <aside className="bg-white shadow-md rounded-lg p-6 lg:col-span-1">
-    <h2 className="text-xl font-semibold mb-4">Latest News</h2>
-    <div className="space-y-6">
+  <aside className="bg-white shadow-lg rounded-xl p-6 lg:col-span-1">
+    <h2 className="text-2xl font-bold text-gray-800 mb-6">Latest Updates</h2>
+    <div className="space-y-8">
       {[
         {
-          title: "EOIs now open for existing home trial energy assessors",
-          date: "18 Nov 2024",
-          image: "/eois-nathers-consultation-news.jpg",
+          title: "New Financial Aid Now Available for Vulnerable Groups",
+          date: "18 Jan 2025",
+          image: "/renewable-energy-projects.jpg",
         },
+        
         {
-          title: "Third lender announced for discounted energy upgrade loans",
-          date: "15 Nov 2024",
+          title: "How to Apply for Emergency Help in Crisis Situations",
+          date: "05 Jan 2025",
           image: "/household-energy-upgrades-fund-news.jpg",
         },
         {
-          title: "Government announces new renewable energy projects",
-          date: "10 Nov 2024",
-          image: "/renewable-energy-projects.jpg",
-        },
-        {
-          title: "Energy-saving tips for households this summer",
-          date: "05 Nov 2024",
+          title: "Quick Tips for Accessing Support in Emergencies",
+          date: "01 Jan 2025",
           image: "/energy-saving-tips.jpg",
         },
-      ].map(({ title, date, }, index) => (
+      ].map(({ title, date, image }, index) => (
         <div
           key={index}
-          className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start"
         >
-          
-          <div>
-            <h3 className="text-lg font-medium">
-              <a href="#" className="text-blue-600 hover:underline">
-                {title}
-              </a>
+          <div className="relative w-full sm:w-auto h-28 sm:h-24 rounded-lg overflow-hidden">
+            <Image
+              src={image}
+              alt={title}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-lg"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <h3 className="text-lg font-semibold text-gray-900 hover:underline">
+              <a href="#">{title}</a>
             </h3>
-            <p className="text-sm text-gray-600">{date}</p>
+            <p className="text-sm text-gray-500 mt-1">{date}</p>
           </div>
         </div>
       ))}
@@ -324,4 +238,4 @@ const NewsSection: React.FC = () => (
   </aside>
 );
 
-export default EnergyBillReliefPage;
+export default UrgentAssistancePage;

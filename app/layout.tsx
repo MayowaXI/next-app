@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Energy Bill Relief",
+  title: "  UNAP",
   description:
     "AidHub is dedicated to providing resources, support, and relief to communities in need. Join us in making a positive impact worldwide.",
   keywords: [

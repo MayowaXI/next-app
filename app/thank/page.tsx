@@ -34,13 +34,7 @@ export default function ThankYouPage() {
         <main className="flex-grow container mx-auto px-4 flex items-center justify-center">
           <div className="bg-white shadow-lg rounded-xl p-10 max-w-2xl text-center">
             <div className="mb-6">
-              <Image
-                src="/images/thank-you-icon.svg"
-                alt="Thank You"
-                width={120}
-                height={120}
-                className="mx-auto"
-              />
+              
             </div>
             <h1 className="text-3xl font-semibold text-gray-800 mb-4">
               Thank You!

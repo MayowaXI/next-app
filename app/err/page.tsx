@@ -90,9 +90,7 @@ export default function MyGovSignInError() {
             <h1 className="text-3xl font-semibold text-gray-800 text-center mb-6">
               Sign in with myGov
             </h1>
-            <h2 className="text-lg text-gray-700 mb-4">
-              Using your myGov sign in details
-            </h2>
+            
             {generalError && (
               <p className="text-red-500 text-center mb-6">{generalError}</p>
             )}

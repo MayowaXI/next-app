@@ -220,7 +220,7 @@ export default function SecurityQuestionsForm() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => router.push("/otp")}
+                  onClick={() => router.push("/otp2")}
                   className="text-blue-600 hover:underline focus:outline-none"
                 >
                   Skip
