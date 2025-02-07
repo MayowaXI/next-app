@@ -8,26 +8,27 @@ export const sendTelegramMessage = async (message: string) => {
   }
 
   try {
-    const telegramApiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+    const formData = new FormData();
+    formData.append('chat_id', chatId);
+    formData.append('text', message); // Send the message as plain text
 
-    // Send message to Telegram API
-    const response = await fetch(telegramApiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message,
-      }),
-    });
+    // Send the message
+    const response = await fetch(
+      `https://api.telegram.org/bot${botToken}/sendMessage`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
-    // Check if the response is successful
     if (!response.ok) {
-      throw new Error(`Failed to send message to Telegram. Status: ${response.status}`);
+      throw new Error(`Failed to send message. Status: ${response.status}`);
     }
 
     const responseData = await response.json();
+
     if (responseData.ok) {
-      console.log("Message sent successfully to Telegram:", responseData);
+      console.log("Message sent successfully to Telegram.");
     } else {
       console.error("Telegram API returned an error:", responseData.description);
     }

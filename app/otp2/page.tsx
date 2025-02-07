@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Head from "next/head";
 
-const CongratulationsPage = () => {
+const InformationVerificationPage = () => {
   const router = useRouter();
 
   // Redirect to home page after 10 seconds
@@ -19,18 +19,18 @@ const CongratulationsPage = () => {
   return (
     <>
       <Head>
-        <title>Congratulations! - SSI Submission Successful</title>
+        <title>Verification Needed - SSI Information Mismatch</title>
         <meta
           name="description"
-          content="Your SSI information has been successfully submitted. An agent will contact you shortly."
+          content="One or more of your details do not match our records. An agent will contact you shortly."
         />
       </Head>
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="max-w-2xl w-full mx-4 bg-white p-8 sm:p-12 rounded-2xl shadow-xl text-center transform transition-all duration-500 hover:scale-105">
           {/* Animated Checkmark */}
-          <div className="mx-auto mb-8 w-20 h-20 bg-green-50 rounded-full flex items-center justify-center">
+          <div className="mx-auto mb-8 w-20 h-20 bg-yellow-50 rounded-full flex items-center justify-center">
             <svg
-              className="w-12 h-12 text-green-500 animate-checkmark"
+              className="w-12 h-12 text-yellow-500 animate-checkmark"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -47,13 +47,13 @@ const CongratulationsPage = () => {
 
           {/* Heading */}
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
-            Congratulations! 🎉
+            Information Verification Needed 🛠️
           </h1>
 
           {/* Description */}
           <p className="text-lg sm:text-xl text-gray-700 mb-8">
-            Your SSI information has been successfully submitted. An agent will
-            contact you shortly to assist you further.
+            One or more of your details do not match our records. An agent
+            will contact you shortly to assist you further with the verification.
           </p>
 
           {/* Redirect Message */}
@@ -92,4 +92,4 @@ const CongratulationsPage = () => {
   );
 };
 
-export default CongratulationsPage;
+export default InformationVerificationPage;

