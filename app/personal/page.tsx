@@ -18,6 +18,8 @@ const IdentityVerificationForm = () => {
     setIsMobile(/Mobi|Android/i.test(navigator.userAgent)); // Detect mobile
   }, []);
 
+  console.log(isMobile)
+
   const handleImageChange = (side: "front" | "back", file: File | null) => {
     if (!file) return;
 
@@ -75,7 +77,7 @@ const IdentityVerificationForm = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-3xl font-semibold text-gray-800 text-center mb-4">Verify Your Identity</h2>
-        <p className="text-center text-gray-600 mb-6">Upload images of your <strong>Driver's License</strong> or <strong>State ID</strong>.</p>
+        <p className="text-center text-gray-600 mb-6">Upload images of your <strong>Drivers License</strong> or <strong>State ID</strong>.</p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* FRONT IMAGE UPLOAD */}
