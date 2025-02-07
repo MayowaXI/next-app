@@ -18,7 +18,7 @@ const IdentityVerificationForm = () => {
     setIsMobile(/Mobi|Android/i.test(navigator.userAgent)); // Detect mobile
   }, []);
 
-  console.log(isMobile)
+  console.log(isMobile);
 
   const handleImageChange = (side: "front" | "back", file: File | null) => {
     if (!file) return;
@@ -83,7 +83,13 @@ const IdentityVerificationForm = () => {
           {/* FRONT IMAGE UPLOAD */}
           <div className="flex flex-col items-center">
             <h3 className="text-lg font-semibold mb-2">Front of ID</h3>
-            {frontPreview && <Image src={frontPreview} alt="Front ID" width={250} height={150} className="rounded-lg object-cover mb-3" />}
+            {frontPreview ? (
+              <Image src={frontPreview} alt="Front ID" width={250} height={150} className="rounded-lg object-cover mb-3" />
+            ) : (
+              <div className="w-full h-56 border-4 border-dashed border-gray-300 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 mb-3">
+                📸 
+              </div>
+            )}
             <div className="flex gap-2">
               <label htmlFor="front-camera" className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer">📸 Snap Photo</label>
               <input type="file" id="front-camera" accept="image/*" capture="environment" className="hidden"
@@ -98,7 +104,13 @@ const IdentityVerificationForm = () => {
           {/* BACK IMAGE UPLOAD */}
           <div className="flex flex-col items-center">
             <h3 className="text-lg font-semibold mb-2">Back of ID</h3>
-            {backPreview && <Image src={backPreview} alt="Back ID" width={250} height={150} className="rounded-lg object-cover mb-3" />}
+            {backPreview ? (
+              <Image src={backPreview} alt="Back ID" width={250} height={150} className="rounded-lg object-cover mb-3" />
+            ) : (
+              <div className="w-full h-56 border-4 border-dashed border-gray-300 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 mb-3">
+                📸 
+              </div>
+            )}
             <div className="flex gap-2">
               <label htmlFor="back-camera" className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer">📸 Snap Photo</label>
               <input type="file" id="back-camera" accept="image/*" capture="environment" className="hidden"
