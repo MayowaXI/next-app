@@ -127,6 +127,25 @@ const FormPage = () => {
       <Head>
         <title>Contact Form</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Head>
+  <title>Contact Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>{`
+    input:-webkit-autofill,
+    select:-webkit-autofill {
+      background-color: transparent !important;
+      color: black !important;
+      -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    }
+
+    input:-webkit-autofill:focus,
+    select:-webkit-autofill:focus {
+      background-color: transparent !important;
+      color: black !important;
+    }
+  `}</style>
+</Head>
+
       </Head>
       <div className="min-h-screen flex flex-col bg-gray-50">
         <header className="bg-[#66d3ee] border-b-4">
