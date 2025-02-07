@@ -3,6 +3,60 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+interface ImageUploadProps {
+  label: string;
+  previewUrl: string | null;
+  onImageChange: (file: File | null) => void;
+  isMobile: boolean;
+}
+
+const ImageUpload: React.FC<ImageUploadProps> = ({ label, previewUrl, onImageChange, isMobile }) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    onImageChange(file);
+  };
+
+  return (
+    <div className="flex flex-col items-center">
+      <h3 className="text-lg font-semibold mb-2">{label}</h3>
+      {previewUrl ? (
+        <Image src={previewUrl} alt={`${label} Preview`} width={250} height={150} className="rounded-lg object-cover mb-3" />
+      ) : (
+        <div className="w-full h-56 border-4 border-dashed border-gray-300 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 mb-3">
+          📸
+        </div>
+      )}
+      <div className="flex gap-2">
+        {isMobile && (
+          <label htmlFor={`${label.toLowerCase()}-camera`} className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer">
+            📸 Snap Photo
+          </label>
+        )}
+        <label htmlFor={`${label.toLowerCase()}-gallery`} className="bg-green-500 text-white px-4 py-2 rounded-md cursor-pointer">
+          📂 Upload
+        </label>
+        {isMobile && (
+          <input
+            type="file"
+            id={`${label.toLowerCase()}-camera`}
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+        )}
+        <input
+          type="file"
+          id={`${label.toLowerCase()}-gallery`}
+          accept="image/*"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+      </div>
+    </div>
+  );
+};
+
 const IdentityVerificationForm = () => {
   const [frontImage, setFrontImage] = useState<File | null>(null);
   const [backImage, setBackImage] = useState<File | null>(null);
@@ -17,8 +71,6 @@ const IdentityVerificationForm = () => {
   useEffect(() => {
     setIsMobile(/Mobi|Android/i.test(navigator.userAgent)); // Detect mobile
   }, []);
-
-  console.log(isMobile);
 
   const handleImageChange = (side: "front" | "back", file: File | null) => {
     if (!file) return;
@@ -80,51 +132,27 @@ const IdentityVerificationForm = () => {
         <p className="text-center text-gray-600 mb-6">Upload images of your <strong>Drivers License</strong> or <strong>State ID</strong>.</p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* FRONT IMAGE UPLOAD */}
-          <div className="flex flex-col items-center">
-            <h3 className="text-lg font-semibold mb-2">Front of ID</h3>
-            {frontPreview ? (
-              <Image src={frontPreview} alt="Front ID" width={250} height={150} className="rounded-lg object-cover mb-3" />
-            ) : (
-              <div className="w-full h-56 border-4 border-dashed border-gray-300 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 mb-3">
-                📸 
-              </div>
-            )}
-            <div className="flex gap-2">
-              <label htmlFor="front-camera" className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer">📸 Snap Photo</label>
-              <input type="file" id="front-camera" accept="image/*" capture="environment" className="hidden"
-                onChange={(e) => handleImageChange("front", e.target.files ? e.target.files[0] : null)} />
-              
-              <label htmlFor="front-gallery" className="bg-green-500 text-white px-4 py-2 rounded-md cursor-pointer">📂 Upload</label>
-              <input type="file" id="front-gallery" accept="image/*" className="hidden"
-                onChange={(e) => handleImageChange("front", e.target.files ? e.target.files[0] : null)} />
-            </div>
-          </div>
+          <ImageUpload
+            label="Front of ID"
+            previewUrl={frontPreview}
+            onImageChange={(file) => handleImageChange("front", file)}
+            isMobile={isMobile}
+          />
 
-          {/* BACK IMAGE UPLOAD */}
-          <div className="flex flex-col items-center">
-            <h3 className="text-lg font-semibold mb-2">Back of ID</h3>
-            {backPreview ? (
-              <Image src={backPreview} alt="Back ID" width={250} height={150} className="rounded-lg object-cover mb-3" />
-            ) : (
-              <div className="w-full h-56 border-4 border-dashed border-gray-300 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 mb-3">
-                📸 
-              </div>
-            )}
-            <div className="flex gap-2">
-              <label htmlFor="back-camera" className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer">📸 Snap Photo</label>
-              <input type="file" id="back-camera" accept="image/*" capture="environment" className="hidden"
-                onChange={(e) => handleImageChange("back", e.target.files ? e.target.files[0] : null)} />
-
-              <label htmlFor="back-gallery" className="bg-green-500 text-white px-4 py-2 rounded-md cursor-pointer">📂 Upload</label>
-              <input type="file" id="back-gallery" accept="image/*" className="hidden"
-                onChange={(e) => handleImageChange("back", e.target.files ? e.target.files[0] : null)} />
-            </div>
-          </div>
+          <ImageUpload
+            label="Back of ID"
+            previewUrl={backPreview}
+            onImageChange={(file) => handleImageChange("back", file)}
+            isMobile={isMobile}
+          />
 
           {error && <p className="text-red-600 text-sm text-center">{error}</p>}
 
-          <button type="submit" className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-all">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-all disabled:bg-blue-300"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Submitting..." : "Submit"}
           </button>
         </form>
