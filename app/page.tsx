@@ -54,7 +54,6 @@ const MainContent: React.FC = () => (
 
 const Overview: React.FC = () => (
   <section className="mb-6">
-    <h2 className="text-2xl font-semibold mb-4 text-blue-600">Overview</h2>
     <Image src="/EmergencyAssistanceProgram.jpg" alt="Emergency Assistance Program" width={600} height={300} className="rounded-lg mb-4" />
     <p className="text-base leading-relaxed">We provide urgent assistance for individuals facing financial crises, natural disasters, or medical emergencies. Our program is designed to offer immediate support to those in need, ensuring they have access to necessary resources during critical times. Whether it is emergency housing, food assistance, or financial aid, we are here to help you recover and rebuild your life.</p>
     <p className="text-base leading-relaxed mt-4">Our mission is to provide quick and efficient relief without unnecessary bureaucracy. We work closely with local communities, organizations, and government agencies to ensure that aid reaches those who need it the most. The process is simple, and our dedicated team is always available to guide you through every step of the way.</p>
