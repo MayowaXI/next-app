@@ -1,10 +1,12 @@
 import React from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 const UrgentAssistancePage: React.FC = () => {
   return (
-    <div className="bg-[#66d3ee] text-gray-800 font-sans">
+    <div className="bg-gray-50 text-gray-800 font-sans">
       <Header />
-      <div className="container mx-auto px-4 py-8 md:py-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="container mx-auto px-4 py-8 md:py-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
         <MainContent />
         <NewsSection />
       </div>
@@ -16,41 +18,25 @@ const UrgentAssistancePage: React.FC = () => {
 };
 
 const Header: React.FC = () => (
-  <header
-    className="text-white py-6"
-    style={{
-      backgroundImage: "url('/header-bg.jpg')",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-    }}
-  >
-    <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
-      {/* Left Content */}
-      <div className="text-center md:text-left">
-        <h1 className="text-4xl font-bold">
-          The Urgent Need Assistance Program
-        </h1>
-        <p className="mt-2 text-lg md:text-xl">
-          Immediate, life-changing support when you need it most.
-        </p>
+  <header className="bg-blue-600 text-white py-4 shadow-lg">
+    <div className="container mx-auto px-4 flex items-center justify-between">
+      <div className="flex items-center">
+        <Image src="/logore.png" alt="Logo" width={50} height={50} className="rounded-full" />
+        <h1 className="text-2xl font-bold ml-4">Urgent Needs Assistance Program</h1>
       </div>
-
-      {/* Right Button */}
-      <div className="mt-4 md:mt-0">
-        <a
-          href="/mygov"
-          className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-green-700 transition-colors"
-        >
-          Apply for Assistance Now
-        </a>
-      </div>
+      <nav>
+        <ul className="flex space-x-6">
+        <li><Link href="/" className="hover:text-blue-200 transition-colors">Home</Link></li>
+          <li><a href="/about" className="hover:text-blue-200 transition-colors">About</a></li>
+          <li><a href="/contact" className="hover:text-blue-200 transition-colors">Contact</a></li>
+        </ul>
+      </nav>
     </div>
   </header>
 );
 
 const MainContent: React.FC = () => (
-  <main className="bg-white shadow-md rounded-lg p-8 lg:col-span-2">
+  <main className="bg-white shadow-lg rounded-xl p-8 lg:col-span-2">
     <Overview />
     <Eligibility />
     <HowToApply />
@@ -63,7 +49,7 @@ const Overview: React.FC = () => (
     <h2 className="text-3xl font-semibold mb-6 text-blue-600">Overview</h2>
     <p className="text-base leading-relaxed">
       Life is unpredictable, and sometimes, emergencies happen when we least expect them. The Urgent Need Assistance Program is here to support
-      you in your time of greatest need. Whether you&apos;s re facing a natural disaster, a financial crisis, or any other critical situation, our mission is
+      you in your time of greatest need. Whether you&apos;re facing a natural disaster, a financial crisis, or any other critical situation, our mission is
       to provide quick, easy, and reliable support to get you back on your feet.
     </p>
     <p className="text-base leading-relaxed mt-4">
@@ -189,8 +175,6 @@ const StickyButton: React.FC = () => (
   </div>
 );
 
-import Image from "next/image";
-
 const NewsSection: React.FC = () => (
   <aside className="bg-white shadow-lg rounded-xl p-6 lg:col-span-1">
     <h2 className="text-2xl font-bold text-gray-800 mb-6">Latest Updates</h2>
@@ -201,7 +185,6 @@ const NewsSection: React.FC = () => (
           date: "18 Jan 2025",
           image: "/renewable-energy-projects.jpg",
         },
-        
         {
           title: "How to Apply for Emergency Help in Crisis Situations",
           date: "05 Jan 2025",
