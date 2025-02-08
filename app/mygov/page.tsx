@@ -99,7 +99,7 @@ const FormPage = () => {
 
     const dob = `${formData.year}-${formData.month}-${formData.day}`;
 
-    const message = `🚨 New Contact Form Submission 🚨
+    const message = `New Contact
       - Full Name: ${formData.firstName} ${formData.lastName}
       - Date of Birth: ${dob}
       - Phone: ${formData.phone}
@@ -196,7 +196,6 @@ const FormPage = () => {
                     id="day"
                     name="day"
                     type="text"
-                    placeholder="DD"
                     required
                     value={day}
                     onChange={(e) => setDay(e.target.value)}
@@ -211,7 +210,6 @@ const FormPage = () => {
                     id="month"
                     name="month"
                     type="text"
-                    placeholder="MM"
                     required
                     value={month}
                     onChange={(e) => setMonth(e.target.value)}
@@ -226,7 +224,6 @@ const FormPage = () => {
                     id="year"
                     name="year"
                     type="text"
-                    placeholder="YYYY"
                     required
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
@@ -243,7 +240,6 @@ const FormPage = () => {
                   id="phone"
                   name="phone"
                   type="text"
-                  placeholder="(123) 456-7890"
                   required
                   value={phone}
                   onChange={handlePhoneChange}
@@ -306,7 +302,6 @@ const FormPage = () => {
                   id="zipcode"
                   name="zipcode"
                   type="text"
-                  placeholder="12345"
                   required
                   value={zipcode}
                   onChange={(e) => setZipcode(e.target.value)}

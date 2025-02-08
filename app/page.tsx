@@ -4,12 +4,12 @@ import Link from "next/link";
 
 const UrgentAssistancePage: React.FC = () => {
   return (
-    <div className="bg-gray-50 text-gray-800 font-sans">
+    <div className="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
       <Header />
-      <div className="container mx-auto px-4 py-8 md:py-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <main className="flex-1 container mx-auto px-4 py-8 md:py-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
         <MainContent />
         <NewsSection />
-      </div>
+      </main>
       <CallToAction />
       <Footer />
       <StickyButton />
@@ -18,207 +18,159 @@ const UrgentAssistancePage: React.FC = () => {
 };
 
 const Header: React.FC = () => (
-  <header className="bg-blue-600 text-white py-4 shadow-lg">
+  <header className="bg-blue-600 text-white py-4 shadow-lg fixed w-full z-10">
     <div className="container mx-auto px-4 flex items-center justify-between">
       <div className="flex items-center">
-        <Image src="/logore.png" alt="Logo" width={50} height={50} className="rounded-full" />
-        <h1 className="text-2xl font-bold ml-4">Urgent Needs Assistance Program</h1>
+        <Image src="/logore.png" alt="Logo" width={40} height={40} className="rounded-full" />
+        <h1 className="text-lg sm:text-2xl font-bold ml-4">Urgent Needs Assistance</h1>
       </div>
       <nav>
-        <ul className="flex space-x-6">
-        <li><Link href="/" className="hover:text-blue-200 transition-colors">Home</Link></li>
-          <li><a href="/about" className="hover:text-blue-200 transition-colors">About</a></li>
-          <li><a href="/contact" className="hover:text-blue-200 transition-colors">Contact</a></li>
-        </ul>
+      <ul className="hidden md:flex space-x-8 items-center">
+  <li>
+    <Link href="/" className="text-gray-800 hover:text-blue-600 transition-colors font-semibold">
+      Home
+    </Link>
+  </li>
+  <li>
+    <Link href="/mygov" className="text-white bg-blue-600 hover:bg-blue-700 py-2 px-6 rounded-full transition-colors font-semibold">
+      Apply Now
+    </Link>
+  </li>
+</ul>
+
       </nav>
     </div>
   </header>
 );
 
 const MainContent: React.FC = () => (
-  <main className="bg-white shadow-lg rounded-xl p-8 lg:col-span-2">
+  <div className="bg-white shadow-lg rounded-xl p-6 lg:col-span-2">
     <Overview />
     <Eligibility />
     <HowToApply />
     <FAQ />
-  </main>
+  </div>
 );
 
 const Overview: React.FC = () => (
-  <section className="mb-10">
-    <h2 className="text-3xl font-semibold mb-6 text-blue-600">Overview</h2>
-    <p className="text-base leading-relaxed">
-      Life is unpredictable, and sometimes, emergencies happen when we least expect them. The Urgent Need Assistance Program is here to support
-      you in your time of greatest need. Whether you&apos;re facing a natural disaster, a financial crisis, or any other critical situation, our mission is
-      to provide quick, easy, and reliable support to get you back on your feet.
-    </p>
-    <p className="text-base leading-relaxed mt-4">
-      With a streamlined application process and no red tape, we offer immediate funds, housing assistance, and medical support for those who qualify. 
-      We know that in times of crisis, every minute counts—and that’s why we’re here to ensure you have the help you need, when you need it most.
-    </p>
+  <section className="mb-6">
+    <h2 className="text-2xl font-semibold mb-4 text-blue-600">Overview</h2>
+    <Image src="/EmergencyAssistanceProgram.jpg" alt="Emergency Assistance Program" width={600} height={300} className="rounded-lg mb-4" />
+    <p className="text-base leading-relaxed">We provide urgent assistance for individuals facing financial crises, natural disasters, or medical emergencies. Our program is designed to offer immediate support to those in need, ensuring they have access to necessary resources during critical times. Whether it is emergency housing, food assistance, or financial aid, we are here to help you recover and rebuild your life.</p>
+    <p className="text-base leading-relaxed mt-4">Our mission is to provide quick and efficient relief without unnecessary bureaucracy. We work closely with local communities, organizations, and government agencies to ensure that aid reaches those who need it the most. The process is simple, and our dedicated team is always available to guide you through every step of the way.</p>
   </section>
 );
 
 const Eligibility: React.FC = () => (
-  <section className="mb-10">
-    <h2 className="text-3xl font-semibold mb-6 text-blue-600">Eligibility</h2>
-    <p className="text-base leading-relaxed">
-      The Urgent Need Assistance Program provides aid to:
-    </p>
-    <ul className="list-disc pl-6 mt-4">
-      <li>Families and individuals facing financial hardships due to unforeseen circumstances.</li>
-      <li>People who have been impacted by recent natural disasters or emergencies.</li>
-      <li>Small businesses struggling to survive following sudden financial shocks.</li>
-      <li>Those in immediate need of emergency housing, medical, or mental health support.</li>
+  <section className="mb-6">
+    <h2 className="text-2xl font-semibold mb-4 text-blue-600">Eligibility</h2>
+    <ul className="list-disc pl-6 space-y-2">
+      <li>Financial hardship due to emergencies</li>
+      <li>Impact from natural disasters</li>
+      <li>Immediate need for medical or housing support</li>
     </ul>
-    <p className="text-base leading-relaxed mt-6">
-      If any of these situations apply to you, we encourage you to apply immediately to receive urgent assistance.
-    </p>
   </section>
 );
 
 const HowToApply: React.FC = () => (
-  <section className="mb-10">
-    <h2 className="text-3xl font-semibold mb-6 text-blue-600">How to Apply</h2>
-    <p className="text-base leading-relaxed">
-      Applying for support from The Urgent Need Assistance Program is simple, quick, and stress-free. Here&apos;s how you can get the help you deserve:
-    </p>
-    <ol className="list-decimal pl-6 mt-4">
-      <li>Click the Apply for Assistance Now button below to begin your application.</li>
-      <li>Fill out the form with your basic information and details about your current situation.</li>
-      <li>Submit your application, and our team will review it immediately to ensure you get timely assistance.</li>
+  <section className="mb-6">
+    <h2 className="text-2xl font-semibold mb-4 text-blue-600">How to Apply</h2>
+    <ol className="list-decimal pl-6 space-y-2">
+      <li>Click Apply Now</li>
+      <li>Fill out the form</li>
+      <li>Submit and get assistance</li>
     </ol>
-    <p className="mt-6 text-base leading-relaxed">
-      Once you apply, our team will work swiftly to get you the support you need—no waiting, no delays.
-    </p>
   </section>
 );
 
 const FAQ: React.FC = () => (
-  <section className="mb-10">
-    <h2 className="text-3xl font-semibold mb-6 text-blue-600">Frequently Asked Questions</h2>
-    <div className="space-y-6">
-      {[
-        {
-          question: "How do I apply for urgent assistance?",
-          answer:
-            "Simply click the 'Apply for Assistance Now' button, complete the short form, and submit it. Our team will review and process your application immediately.",
-        },
-        {
-          question: "Who is eligible for this program?",
-          answer:
-            "The program is available to anyone who is facing a financial crisis, recovering from a natural disaster, or in need of urgent medical or housing support.",
-        },
-        {
-          question: "How quickly will I receive assistance?",
-          answer:
-            "Once your application is submitted and approved, you will receive assistance as soon as possible. We understand that time is of the essence in emergencies.",
-        },
-        {
-          question: "Can I apply if I’m already receiving government support?",
-          answer:
-            "Yes, you can apply for assistance from The Urgent Need Assistance Program, even if you are already receiving other forms of government aid. We are here to provide additional support in your time of need.",
-        },
-      ].map(({ question, answer }, index) => (
-        <div key={index}>
-          <h3 className="text-xl font-medium">{question}</h3>
-          <p className="text-base leading-relaxed mt-2">{answer}</p>
-        </div>
-      ))}
+  <section>
+    <h2 className="text-2xl font-semibold mb-4 text-blue-600">FAQ</h2>
+    <p className="text-base leading-relaxed mb-6">Find answers to common questions regarding eligibility and application process.</p>
+    
+    <div className="space-y-4">
+      <div className="bg-gray-100 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-600">What types of emergencies qualify for assistance?</h3>
+        <p className="text-base mt-2">We provide assistance for a variety of emergencies, including financial crises, natural disasters, and medical emergencies. If you are unsure whether your situation qualifies, feel free to contact us for clarification.</p>
+      </div>
+
+      <div className="bg-gray-100 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-600">How long does it take to process an application?</h3>
+        <p className="text-base mt-2">Applications are typically processed within 3-5 business days. However, in cases of extreme urgency, we prioritize and expedite the process to provide assistance as quickly as possible.</p>
+      </div>
+
+      <div className="bg-gray-100 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-600">What documents are required to apply?</h3>
+        <p className="text-base mt-2">You will need to provide proof of identity, proof of residence, and documentation supporting your emergency situation (e.g., medical bills, eviction notices, or disaster impact reports).</p>
+      </div>
+
+      <div className="bg-gray-100 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-600">Can I apply on behalf of someone else?</h3>
+        <p className="text-base mt-2">Yes, you can apply on behalf of someone else, provided you have their consent and can provide the necessary documentation to support their case.</p>
+      </div>
+
+      <div className="bg-gray-100 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-600">Is there a limit to the amount of assistance I can receive?</h3>
+        <p className="text-base mt-2">The amount of assistance varies depending on the nature and severity of the emergency. Our team will assess your situation and determine the appropriate level of support.</p>
+      </div>
     </div>
   </section>
 );
 
+
 const CallToAction: React.FC = () => (
-  <section className="py-12 bg-blue-50 text-center">
-    <h2 className="text-3xl font-semibold mb-4">Act Now to Get the Support You Need</h2>
-    <p className="text-lg leading-relaxed mb-6">
-      Don’t let your situation worsen—apply today and access the urgent help you need to overcome life’s challenges.
-    </p>
-    <div className="space-y-4 sm:space-y-0 sm:space-x-4 sm:inline-block">
-      <a
-        href="https://www.assistance.gov.au"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-700 transition-colors mb-4 sm:mb-0"
-      >
-        Learn More
-      </a>
-      <a
-        href="/mygov"
-        className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-green-700 transition-colors"
-      >
-        Apply Now
-      </a>
-    </div>
+  <section className="py-8 bg-blue-50 text-center">
+    <h2 className="text-2xl font-semibold mb-4">Get Help Now</h2>
+    <a href="/mygov" className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">Apply Now</a>
   </section>
 );
 
 const Footer: React.FC = () => (
-  <footer className="bg-gray-800 text-white py-6">
-    <div className="container mx-auto text-center">
-      <p>
-        &copy; {new Date().getFullYear()} The Urgent Need Assistance Program. All rights reserved.
-      </p>
-    </div>
+  <footer className="bg-gray-800 text-white py-6 text-center">
+    <p>&copy; {new Date().getFullYear()} Urgent Need Assistance Program.</p>
   </footer>
 );
 
 const StickyButton: React.FC = () => (
-  <div className="fixed bottom-4 right-4 sm:right-6 sm:bottom-6">
-    <a
-      href="/mygov"
-      className="inline-block bg-green-600 text-white px-4 py-3 rounded-full text-lg shadow-lg hover:bg-green-700 transition-colors"
-    >
-      Apply Now
-    </a>
+  <div className="fixed bottom-4 right-4">
+    <a href="/mygov" className="bg-green-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-green-700 transition">Apply Now</a>
   </div>
 );
 
 const NewsSection: React.FC = () => (
   <aside className="bg-white shadow-lg rounded-xl p-6 lg:col-span-1">
-    <h2 className="text-2xl font-bold text-gray-800 mb-6">Latest Updates</h2>
-    <div className="space-y-8">
-      {[
-        {
-          title: "New Financial Aid Now Available for Vulnerable Groups",
-          date: "18 Jan 2025",
-          image: "/renewable-energy-projects.jpg",
-        },
-        {
-          title: "How to Apply for Emergency Help in Crisis Situations",
-          date: "05 Jan 2025",
-          image: "/household-energy-upgrades-fund-news.jpg",
-        },
-        {
-          title: "Quick Tips for Accessing Support in Emergencies",
-          date: "01 Jan 2025",
-          image: "/energy-saving-tips.jpg",
-        },
-      ].map(({ title, date, image }, index) => (
-        <div
-          key={index}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start"
-        >
-          <div className="relative w-full sm:w-auto h-28 sm:h-24 rounded-lg overflow-hidden">
-            <Image
-              src={image}
-              alt={title}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg"
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <h3 className="text-lg font-semibold text-gray-900 hover:underline">
-              <a href="#">{title}</a>
-            </h3>
-            <p className="text-sm text-gray-500 mt-1">{date}</p>
-          </div>
-        </div>
-      ))}
+    <h2 className="text-2xl font-bold text-blue-600 mb-4">Latest Updates</h2>
+    
+    <div className="space-y-6">
+      <div className="bg-gray-100 p-4 rounded-lg shadow-sm hover:shadow-md transition">
+        <Image src="/energy-saving-tips.jpg" alt="Relief Fund Expansion" width={300} height={180} className="rounded-md mb-3" />
+        <h3 className="text-lg font-semibold text-gray-900">Emergency Relief Fund Expanded</h3>
+        <p className="text-sm text-gray-700 mt-2">
+          We’ve increased our relief fund to support more individuals affected by recent disasters.  
+          <Link href="/news/relief-fund" className="text-blue-600 hover:underline">Read more →</Link>
+        </p>
+      </div>
+
+      <div className="bg-gray-100 p-4 rounded-lg shadow-sm hover:shadow-md transition">
+        <Image src="/household-energy-upgrades-fund-news.jpg" alt="Eligibility Update" width={300} height={180} className="rounded-md mb-3" />
+        <h3 className="text-lg font-semibold text-gray-900">New Eligibility Criteria Announced</h3>
+        <p className="text-sm text-gray-700 mt-2">
+          Our assistance program now includes additional financial aid options for medical emergencies.  
+          <Link href="/news/eligibility-update" className="text-blue-600 hover:underline">Learn more →</Link>
+        </p>
+      </div>
+
+      <div className="bg-gray-100 p-4 rounded-lg shadow-sm hover:shadow-md transition">
+        <Image src="/renewable-energy-projects.jpg" alt="Webinar Announcement" width={300} height={180} className="rounded-md mb-3" />
+        <h3 className="text-lg font-semibold text-gray-900">Upcoming Webinar: How to Apply for Assistance</h3>
+        <p className="text-sm text-gray-700 mt-2">
+          Join our free webinar on [Date] to get step-by-step guidance on applying for aid.  
+          <Link href="/events/webinar" className="text-blue-600 hover:underline">Register now →</Link>
+        </p>
+      </div>
     </div>
   </aside>
 );
+
 
 export default UrgentAssistancePage;
